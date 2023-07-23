@@ -194,7 +194,7 @@ SELECT
 FROM 
     stg.orders o 
 LEFT JOIN dw.ship_mode sm 
-	ON o.ship_mode = sm.shipping_mode
+	ON o.ship_mode = sm.ship_mode
 LEFT JOIN dw.geo_data gd 
 	ON o.postal_code = gd.postal_code 
 	AND gd.country=o.country 
@@ -203,7 +203,7 @@ LEFT JOIN dw.geo_data gd
 LEFT JOIN dw.product p 
 	ON o.product_name = p.product_name 
 	AND o.segment = p.segment 
-	AND o.subcategory = p.sub_category 
+	AND o.subcategory = p.subcategory 
 	AND o.category = p.category 
 	AND o.product_id = p.product_id 
 LEFT JOIN dw.customer c 
