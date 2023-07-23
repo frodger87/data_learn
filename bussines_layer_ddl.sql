@@ -118,6 +118,13 @@ WHERE
     city = 'Burlington'  
     AND postal_code is null;
 
+--decide problem with raw data
+UPDATE stg.order
+SET postal_code = '05401'
+WHERE 
+    city = 'Burlington'  
+    AND postal_code is null;
+
 
 --CALENDAR use function instead 
 -- examplehttps://tapoueh.org/blog/2017/06/postgresql-and-the-calendar/
