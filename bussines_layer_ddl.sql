@@ -158,3 +158,55 @@ FROM
 
 
 
+-- ************************************** sales_fact
+
+CREATE TABLE dw.sales_fact
+(
+ sale_id          int NOT NULL,
+ sales           float NOT NULL,
+ quantity        int NOT NULL,
+ discount        float NOT NULL,
+ profit          float NOT NULL,
+ ship_id         int NOT NULL,
+ geo_id          int NOT NULL,
+ row_product_id  int NOT NULL,
+ row_customer_id int NOT NULL,
+ order_id        varchar NOT NULL,
+ order_date_id   int NOT NULL,
+ ship_date_id   int NOT NULL,
+ CONSTRAINT PK_sales_fact PRIMARY KEY ( sale_id ));
+
+--inser sales_fact
+INSERT INTO dw.sales_fact 
+SELECT
+	100+row_number() over() AS sales_id,
+	o.sales,
+	o.quantity,
+	o.discount,
+	o.profit,
+	sm.ship_id,
+	gd.geo_id,
+	p.row_product_id,
+	c.row_customer_id,
+	o.order_id,
+	to_char(o.order_date,'yyyymmdd')::int AS  order_date_id,
+	to_char(o.ship_date,'yyyymmdd')::int AS  ship_date_id
+FROM 
+    stg.orders o 
+LEFT JOIN dw.ship_mode sm 
+	ON o.ship_mode = sm.shipping_mode
+LEFT JOIN dw.geo_data gd 
+	ON o.postal_code = gd.postal_code 
+	AND gd.country=o.country 
+	AND gd.city = o.city 
+	AND gd.state = o.state 
+LEFT JOIN dw.product p 
+	ON o.product_name = p.product_name 
+	AND o.segment = p.segment 
+	AND o.subcategory = p.sub_category 
+	AND o.category = p.category 
+	AND o.product_id = p.product_id 
+LEFT JOIN dw.customer c 
+	ON c.customer_id = o.customer_id 
+	AND c.customer_name = o.customer_name 
+
