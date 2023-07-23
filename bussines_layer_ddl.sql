@@ -11,7 +11,7 @@ CREATE TABLE dw.ship_mode
 
 --insert into ship_mode
 
-INSERT INTO ship_mode 
+INSERT INTO dw.ship_mode 
 SELECT 
 	ROW_NUMBER() OVER(),
 	ship_mode 
@@ -23,16 +23,16 @@ FROM
 ) AS t;
 
 
-CREATE TABLE customer
+CREATE TABLE dw.customer
 (
  row_customer_id int NOT NULL,
  customer_id     varchar NOT NULL,
  customer_name   varchar NOT NULL,
- CONSTRAINT PK_1 PRIMARY KEY ( row_customer_id )
+ CONSTRAINT PK_11 PRIMARY KEY ( row_customer_id )
 );
 
 --insert customer
-INSERT INTO customer
+INSERT INTO dw.customer
 SELECT 
     ROW_NUMBER() OVER(),
     customer_id,
@@ -46,7 +46,7 @@ FROM
 ) AS t
 
 -- ************************************** product
-CREATE TABLE product
+CREATE TABLE dw.product
 (
  row_product_id int NOT NULL,
  product_id     varchar NOT NULL,
@@ -54,11 +54,11 @@ CREATE TABLE product
  segment        varchar NOT NULL,
  category       varchar NOT NULL,
  subcategoty    varchar NOT NULL,
- CONSTRAINT PK_1 PRIMARY KEY ( row_product_id )
+ CONSTRAINT PK_12 PRIMARY KEY ( row_product_id )
 );
 
 --insert product
-INSERT INTO product 
+INSERT INTO dw.product 
 SELECT 
     ROW_NUMBER () OVER(),
     product_id,
@@ -80,19 +80,19 @@ FROM (
 
 -- ************************************geo_data
 
-CREATE TABLE geo_data
+CREATE TABLE dw.geo_data
 (
  geo_id      int NOT NULL,
  country      varchar NOT NULL,
  city        varchar NOT NULL,
  "state"       varchar NOT NULL,
- postal_code varchar NOT NULL,
+ postal_code varchar NULL,
  region      varchar NOT NULL,
- CONSTRAINT PK_1 PRIMARY KEY ( geo_id )
+ CONSTRAINT PK_geo_data PRIMARY KEY ( geo_id )
 );
 
 --insert geo
-INSERT INTO product 
+INSERT INTO dw.geo_data 
 SELECT 
     ROW_NUMBER () OVER(),
     country,
@@ -110,6 +110,13 @@ FROM (
       FROM 
           stg.orders
 ) AS t;
+
+--decide problem with raw data
+UPDATE dw.geo_data
+SET postal_code = '05401'
+WHERE 
+    city = 'Burlington'  
+    AND postal_code is null;
 
 
 --CALENDAR use function instead 
